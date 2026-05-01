@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Streamer Panel</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0a0a0a;
+  color: white;
+  display: flex;
+  height: 100vh;
+}
+
+/* CHAT */
+.left {
+  flex: 2;
+  background: #111;
+  border-right: 2px solid #ff0033;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.chatbox {
+  color:#ff0033;
+  font-size:18px;
+}
+
+/* PANEL */
+.right {
+  flex: 1;
+  background: #0f0f0f;
+  border-left: 2px solid #ff0033;
+  padding: 15px;
+}
+
+h2 {
+  color: #ff0033;
+}
+
+/* BOXES */
+.box {
+  background:#111;
+  border:1px solid #ff0033;
+  border-radius:10px;
+  padding:10px;
+  margin-bottom:15px;
+}
+
+/* BUTTONS */
+button {
+  width:100%;
+  padding:10px;
+  margin-top:5px;
+  background:#111;
+  border:1px solid #ff0033;
+  color:white;
+  border-radius:8px;
+}
+
+button:hover {
+  background:#ff0033;
+  color:black;
+}
+</style>
+</head>
+
+<body>
+
+<div class="left">
+  <div class="chatbox">
+    💬 Chat Bot activo (Node leyendo mensajes)
+  </div>
+</div>
+
+<div class="right">
+
+  <div class="box">
+    <h2>🏆 Top Mensajes</h2>
+    <div id="msg"></div>
+  </div>
+
+  <div class="box">
+    <h2>⏱ Top Watchtime</h2>
+    <div id="time"></div>
+  </div>
+
+</div>
+
+<script>
+
+async function load(){
+  let m = await fetch("/api/top/messages").then(r=>r.json());
+  let t = await fetch("/api/top/watchtime").then(r=>r.json());
+
+  document.getElementById("msg").innerHTML =
+    m.map(u=>`<p>${u[0]} - ${u[1]} msgs</p>`).join("");
+
+  document.getElementById("time").innerHTML =
+    t.map(u=>`<p>${u[0]} - ${u[1]} sec</p>`).join("");
+}
+
+setInterval(load, 3000);
+load();
+
+</script>
+
+</body>
+</html>
